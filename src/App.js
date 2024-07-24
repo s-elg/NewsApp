@@ -1,26 +1,43 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-//FlatList: herhangi bir şekilde veri görüntülenmesi yapacaksak bu componenti kullanırız
-//çalışma mantığı: uygulamaya 2000 tane veri akıyor ancak bizim ekranda göstereceğimiz 5 tane veri, bunu uygulamayı çok yormadan sağlayan bir component,
-//yani şu an ekranda 5 tane veri var, ekranı kaydırdığında da 5 tane veriyi hazırda tutuyo
+import { StyleSheet, Text, View, FlatList,} from 'react-native';
 import React from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import NewsCard from './components/NewsCard'
+import Banner from './components/Banner'
+
 import news_data from './news_data.json'
 
 
 
 export default function App() {
+
+  const renderNews = ({item}) => <NewsCard news = {item} />; //renderItem'i tekrar tekrar çağırmak yerine fonskiyonu dışarıya çıkardık
+   
   return (
-    <SafeAreaProvider>
-      <SafeAreaView>
+    <SafeAreaProvider style = {styles.container}>
+      <SafeAreaView style = {styles.container}>
+        <Text style = {styles.headerText}>News</Text>
         <View>
-          <Text>News App</Text>
-          <FlatList 
+          <FlatList
+            ListHeaderComponent={() => (<Banner />)}
+            keyExtractor={(item) => item.u_id.toString()} //data takibi için, idleri veririz
             data = {news_data} //kullanılacak verileri içerir
-            renderItem={({item}) => <Text>{item.title}</Text>} //bu verilerin nasıl görüntüleneceğini tanımlar
+            renderItem={renderNews} //bu verilerin nasıl görüntüleneceğini tanımlar
           />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#eceff1',
+  },
+
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 50,
+  }
+})
 
